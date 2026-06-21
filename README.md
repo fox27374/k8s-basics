@@ -3,23 +3,38 @@
 
 This guide is inteded to be used during a instructor-led training. Some chapters are structured in the way that students can work on them alone without an instructor.
 
-0) [Run first container](doc/Labguide/run-first-container.md)
-1) [Inspect images](doc/Labguide/inspect-images.md)
-2) [Build image](doc/Labguide/build-image.md)
-3) [Change data](doc/Labguide/change-data.md)
-4) [Bind mount](doc/Labguide/bind-mount.md)
-5) [Ressources](doc/Labguide/ressources.md)
-6) [Build image advanced](doc/Labguide/build-image-advanced.md)
-7) [Push to dockerhub](doc/Labguide/push-to-dockerhub.md)
-8) [Network and DNS](doc/Labguide/network-and-dns.md)
-9) [Compose](doc/Labguide/compose.md)
-10) [Compose 2](doc/Labguide/compose-2.md)
+0) [kubectl basics](doc/Labguide/kubectl-basics.md)
+1) [Pod manifests](doc/Labguide/pod-manifests.md)
+2) [Deployments](doc/Labguide/deployments.md)
+3) [Services](doc/Labguide/services.md)
+4) [Labels and namespaces](doc/Labguide/labels-and-namespaces.md)
+5) [ConfigMaps and Secrets](doc/Labguide/configmaps-and-secrets.md)
+6) [Storage](doc/Labguide/storage.md)
+7) [Health checks and resources](doc/Labguide/health-and-resources.md)
+8) [Rolling updates](doc/Labguide/rolling-updates.md)
+9) [Ingress](doc/Labguide/ingress.md)
+
+Optional / advanced:
+
+10) [Helm](doc/Labguide/helm.md)
+11) [Capstone: multi-tier app](doc/Labguide/capstone-app.md)
 
 
-All commands are tested and based on [Ubuntu 24.04](https://ubuntu.com). IP addresses and FQDN names are internal lab IPs and names.
+## Lab environment
 
+All commands are tested on [k3s](https://k3s.io) running on [Ubuntu 24.04](https://ubuntu.com). IP addresses and FQDN names are internal lab IPs and names.
 
-SGT tagging for physikal ports
-also available for VLANs?
-Assign SGT to vmware
-can vmware propagate SGTs to ISE
+k3s gives you a real cluster with batteries included:
+
+- `kubectl` is installed with k3s; the kubeconfig lives at `/etc/rancher/k3s/k3s.yaml`
+- **Traefik** ingress controller (used in the Ingress chapter)
+- **local-path** default StorageClass (used in the Storage chapter)
+- **ServiceLB** so `LoadBalancer` Services work without a cloud provider
+
+Install a single-node cluster with:
+
+```
+curl -sfL https://get.k3s.io | sh -
+```
+
+Reusable manifests applied during the labs live under [`lab/manifests/`](lab/manifests/).
