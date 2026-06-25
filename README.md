@@ -4,20 +4,21 @@
 This guide is inteded to be used during a instructor-led training. Some chapters are structured in the way that students can work on them alone without an instructor.
 
 0) [kubectl basics](doc/Labguide/kubectl-basics.md)
-1) [Pod manifests](doc/Labguide/pod-manifests.md)
-2) [Deployments](doc/Labguide/deployments.md)
-3) [Services](doc/Labguide/services.md)
-4) [Labels and namespaces](doc/Labguide/labels-and-namespaces.md)
-5) [ConfigMaps and Secrets](doc/Labguide/configmaps-and-secrets.md)
-6) [Storage](doc/Labguide/storage.md)
-7) [Health checks and resources](doc/Labguide/health-and-resources.md)
-8) [Rolling updates](doc/Labguide/rolling-updates.md)
-9) [Ingress](doc/Labguide/ingress.md)
+1) [Imperative vs declarative](doc/Labguide/imperative-vs-declarative.md)
+2) [Pod manifests](doc/Labguide/pod-manifests.md)
+3) [Deployments](doc/Labguide/deployments.md)
+4) [Services](doc/Labguide/services.md)
+5) [Labels and namespaces](doc/Labguide/labels-and-namespaces.md)
+6) [ConfigMaps and Secrets](doc/Labguide/configmaps-and-secrets.md)
+7) [Storage](doc/Labguide/storage.md)
+8) [Health checks and resources](doc/Labguide/health-and-resources.md)
+9) [Rolling updates](doc/Labguide/rolling-updates.md)
+10) [Ingress](doc/Labguide/ingress.md)
 
 Optional / advanced:
 
-10) [Helm](doc/Labguide/helm.md)
-11) [Capstone: multi-tier app](doc/Labguide/capstone-app.md)
+11) [Helm](doc/Labguide/helm.md)
+12) [Capstone: multi-tier app](doc/Labguide/capstone-app.md)
 
 
 ## Lab environment
