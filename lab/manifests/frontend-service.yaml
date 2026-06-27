@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: shop
+  labels:
+    app: frontend
+spec:
+  type: ClusterIP
+  selector:
+    app: frontend
+    version: v1          # pin to v1 so the canary (v2) split stays clean
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80

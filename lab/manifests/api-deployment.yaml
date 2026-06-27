@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: shop
+  labels:
+    app: api
+    tier: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+        tier: backend
+    spec:
+      containers:
+        - name: api
+          image: lab-api:1
+          imagePullPolicy: IfNotPresent   # image is side-loaded into k3s, not pulled
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: api-data
+              mountPath: /data.json
+              subPath: data.json
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /api
+              port: 80
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+      volumes:
+        - name: api-data
+          configMap:
+            name: api-data

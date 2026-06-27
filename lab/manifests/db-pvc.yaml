@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-data
+  namespace: shop
+spec:
+  accessModes:
+    - ReadWriteOnce
+  # k3s default StorageClass is local-path; omit storageClassName to use it.
+  resources:
+    requests:
+      storage: 1Gi
