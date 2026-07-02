@@ -94,12 +94,12 @@ curl -s http://<lab-host>/
 
 You can host multiple Services behind one entrypoint. Add a `PathPrefix` rule for the api (illustrative):
 
-```bash
-kubectl patch ingressroute frontend -n shop --type=json -p '[
-  {"op":"add","path":"/spec/routes/-","value":{
-     "match":"PathPrefix(`/api`)",
-     "kind":"Rule","services":[{"name":"api","port":80}]}}]'
-curl -s http://<lab-host>/api/api
+```yaml
+- match: PathPrefix(`/api`)
+      kind: Rule
+      services:
+        - name: api
+          port: 80
 ```
 
 <details><summary>Expected output</summary>

@@ -19,12 +19,12 @@ for "a new build") and weight blue/green, then move the dial.
 > Our two "versions" differ only by the `COLOR` env value so the split is visible at a glance. In a
 > real canary, v2 is a genuinely new image tag — everything else here is identical.
 
-The pieces (all in `lab/13/canary.yaml`):
+The pieces (each a file in `lab/13/`):
 
-- `frontend-v2` Deployment + Service (selector `version: v2`)
-- the `frontend` Service is pinned to `version: v1`, so blue and green are cleanly separable
-- a `TraefikService` **`frontend-split`** weighting `frontend` (blue) and `frontend-v2` (green)
-- the `frontend` `IngressRoute` re-pointed at `frontend-split`
+- `deployment-v2.yaml` — the `frontend-v2` Deployment (`COLOR=green`, selector `version: v2`)
+- `service-v2.yaml` — a ClusterIP Service for v2 (the v1 `frontend` Service is pinned to `version: v1`, so blue and green stay separable)
+- `traefikservice.yaml` — the weighted `TraefikService` **`frontend-split`** (blue + green)
+- `ingressroute-split.yaml` — re-points the `frontend` `IngressRoute` at `frontend-split`
 
 ## Commands
 
@@ -40,7 +40,8 @@ The pieces (all in `lab/13/canary.yaml`):
 ### 1. Deploy the canary (v2) alongside v1
 
 ```bash
-kubectl apply -f lab/13/canary.yaml
+kubectl apply -f lab/13/deployment-v2.yaml -f lab/13/service-v2.yaml \
+  -f lab/13/traefikservice.yaml -f lab/13/ingressroute-split.yaml
 kubectl rollout status deployment/frontend-v2 -n shop
 kubectl get deploy -n shop -l app=frontend          # frontend (v1) and frontend-v2 both Ready
 ```
@@ -127,7 +128,8 @@ kubectl apply -f lab/13/ingressroute.yaml   # points straight at frontend (now v
 ## Cleanup
 
 ```bash
-kubectl delete -f lab/13/canary.yaml --ignore-not-found
+kubectl delete -f lab/13/deployment-v2.yaml -f lab/13/service-v2.yaml \
+  -f lab/13/traefikservice.yaml -f lab/13/ingressroute-split.yaml --ignore-not-found
 kubectl apply -f lab/13/deployment.yaml -f lab/13/service.yaml \
   -f lab/13/ingressroute.yaml
 ```

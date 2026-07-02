@@ -1,0 +1,17 @@
+# Re-points the existing `frontend` IngressRoute at the weighted TraefikService.
+# Same name as ingressroute.yaml, so applying this replaces the single-Service route
+# with the split; apply ingressroute.yaml again to route straight to v1.
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: frontend
+  namespace: shop
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: frontend-split
+          kind: TraefikService
