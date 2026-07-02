@@ -105,11 +105,11 @@ frontend-5f8c...-klmno      1m           4Mi
 
 ### 5. Watch a container exceed its memory limit (OOMKill)
 
-Run a Pod with a tiny memory limit and a process that allocates past it:
+Apply the Pod in [`lab/11/oom-demo.yaml`](../../lab/11/oom-demo.yaml) — a tiny 32Mi memory limit and
+a process that tries to allocate 128Mi:
 
 ```bash
-kubectl run oom-demo -n shop --image=polinux/stress --restart=Never \
-  --overrides='{"spec":{"containers":[{"name":"oom-demo","image":"polinux/stress","resources":{"limits":{"memory":"32Mi"}},"command":["stress","--vm","1","--vm-bytes","128M","--vm-hang","0"]}]}}'
+kubectl apply -f lab/11/oom-demo.yaml
 kubectl get pod oom-demo -n shop -w        # STATUS becomes OOMKilled, then CrashLoopBackOff
 ```
 
@@ -123,7 +123,7 @@ oom-demo   0/1     OOMKilled   1          6s
 
 ```bash
 kubectl describe pod oom-demo -n shop | grep -i -A2 'last state'   # Reason: OOMKilled
-kubectl delete pod oom-demo -n shop
+kubectl delete -f lab/11/oom-demo.yaml
 ```
 
 ## Recap
@@ -137,7 +137,7 @@ kubectl delete pod oom-demo -n shop
 
 ```bash
 kubectl delete -f lab/11/probe-demo.yaml --ignore-not-found
-kubectl delete pod oom-demo -n shop --ignore-not-found
+kubectl delete -f lab/11/oom-demo.yaml --ignore-not-found
 ```
 
 ## Going further (optional)

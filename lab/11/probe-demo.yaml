@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
     - name: web
-      image: nginx:alpine
+      image: cr.lab.local/nginx:alpine
       ports:
         - containerPort: 80
       readinessProbe:
