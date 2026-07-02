@@ -39,7 +39,7 @@ kubectl create configmap demo -n shop \
 kubectl get configmap demo -n shop -o yaml
 ```
 
-The workload's real ConfigMap is declarative — it holds the JSON the api serves:
+The workload's real ConfigMap is declarative:
 
 ```bash
 kubectl apply -f lab/08/configmap.yaml
@@ -59,25 +59,7 @@ data:
 ```
 </details>
 
-### 2. Inject ConfigMap values as environment variables
-
-The `demo` ConfigMap, surfaced as env vars in a throwaway Pod:
-
-```bash
-kubectl run cm-env --rm -it -n shop --restart=Never --image=busybox \
-  --overrides='{"spec":{"containers":[{"name":"cm-env","image":"busybox","command":["env"],"envFrom":[{"configMapRef":{"name":"demo"}}]}]}}' \
-  | grep -E 'greeting|tier'
-```
-
-<details><summary>Expected output</summary>
-
-```
-greeting=hello
-tier=backend
-```
-</details>
-
-### 3. Mount a ConfigMap as a file (the api tier)
+### 2. Mount a ConfigMap as a file
 
 `lab/08/deployment.yaml` mounts the `api-data` ConfigMap's `data.json` key at
 `/data.json` — exactly where the Go app reads it:
@@ -108,7 +90,7 @@ kubectl run client --rm -it --image=curlimages/curl -n shop --restart=Never -- c
 ```
 </details>
 
-### 4. Change the config and re-roll
+### 3. Change the config and re-roll
 
 Edit the data in `lab/08/configmap.yaml` (e.g. add an item), then:
 
