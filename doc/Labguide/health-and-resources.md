@@ -41,27 +41,37 @@ kubectl get deploy api -n shop -o yaml | grep -A6 resources
 
 > `frontend` and `api` use HTTP readiness probes; `db` uses an `exec` probe (`pg_isready`).
 
-### 2. Add a liveness probe and watch a failing container restart
+### 2. Watch a readiness probe keep a Pod out of service
 
-Apply a deliberately broken liveness probe to a throwaway Pod (it checks a path that doesn't exist):
+Apply the throwaway Pod in [`lab/11/probe-demo.yaml`](../../lab/11/probe-demo.yaml) — it runs nginx,
+but its readiness probe checks `/healthz`, a path nginx doesn't serve, so the probe never passes:
 
 ```bash
-kubectl run probe-demo -n shop --image=nginx:alpine --restart=Never \
-  --overrides='{"spec":{"containers":[{"name":"probe-demo","image":"nginx:alpine","livenessProbe":{"httpGet":{"path":"/nope","port":80},"periodSeconds":3,"failureThreshold":2}}]}}'
-kubectl get pod probe-demo -n shop -w        # RESTARTS climbs as liveness keeps failing
+kubectl apply -f lab/11/probe-demo.yaml
+kubectl get pod probe-demo -n shop -w        # READY stays 0/1 while STATUS is Running
 ```
 
 <details><summary>Expected output</summary>
 
 ```
-NAME         READY   STATUS    RESTARTS      AGE
-probe-demo   1/1     Running   2 (5s ago)    25s
+NAME         READY   STATUS    RESTARTS   AGE
+probe-demo   0/1     Running   0          20s
 ```
 </details>
 
 ```bash
-kubectl describe pod probe-demo -n shop | sed -n '/Events/,$p'   # "Liveness probe failed... Killing"
-kubectl delete pod probe-demo -n shop
+kubectl describe pod probe-demo -n shop | sed -n '/Events/,$p'   # "Readiness probe failed... 404"
+```
+
+> The container is **running** but not **ready**: a failing readiness probe never restarts the Pod,
+> it just holds it out of Service endpoints. Point the probe at `/` in the manifest and re-apply and
+> `READY` flips to `1/1`.
+>
+> Want the other kind? Change `readinessProbe` to `livenessProbe` in the same file and re-apply — a
+> failing **liveness** probe **restarts** the container, so `RESTARTS` climbs instead.
+
+```bash
+kubectl delete -f lab/11/probe-demo.yaml
 ```
 
 ### 3. Observe readiness gating traffic
@@ -126,7 +136,8 @@ kubectl delete pod oom-demo -n shop
 ## Cleanup
 
 ```bash
-kubectl delete pod probe-demo oom-demo -n shop --ignore-not-found
+kubectl delete -f lab/11/probe-demo.yaml --ignore-not-found
+kubectl delete pod oom-demo -n shop --ignore-not-found
 ```
 
 ## Going further (optional)
