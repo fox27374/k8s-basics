@@ -56,7 +56,7 @@ kubectl delete pod scratch -n shop      # the emptyDir is gone with the Pod
 ### 3. Create the PersistentVolumeClaim for the db
 
 ```bash
-kubectl apply -f lab/manifests/db-pvc.yaml
+kubectl apply -f lab/10/db-pvc.yaml
 kubectl get pvc db-data -n shop
 ```
 

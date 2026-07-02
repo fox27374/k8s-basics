@@ -1,0 +1,14 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: frontend
+  namespace: shop
+spec:
+  entryPoints:
+    - web                       # Traefik's HTTP entrypoint (:80) on k3s
+  routes:
+    - match: Host(`frontend.127.0.0.1.nip.io`)
+      kind: Rule
+      services:
+        - name: frontend        # the ClusterIP Service from frontend-service.yaml
+          port: 80

@@ -19,7 +19,7 @@ and a `frontend` Service in `test` are entirely separate. Namespaces are the uni
 Not everything is namespaced: cluster-wide objects like Nodes, PersistentVolumes and StorageClasses
 live *outside* any namespace. k3s starts with `default` (where you land if you specify nothing),
 plus `kube-system` (the cluster's own components) and a couple of others. Our whole workload lives in
-**`shop`**, created from [`lab/manifests/namespace.yaml`](../../lab/manifests/namespace.yaml).
+**`shop`**, created from [`lab/07/namespace.yaml`](../../lab/07/namespace.yaml).
 
 ## Commands
 

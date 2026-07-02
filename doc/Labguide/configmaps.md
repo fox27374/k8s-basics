@@ -42,7 +42,7 @@ kubectl get configmap demo -n shop -o yaml
 The workload's real ConfigMap is declarative — it holds the JSON the api serves:
 
 ```bash
-kubectl apply -f lab/manifests/api-configmap.yaml
+kubectl apply -f lab/08/api-configmap.yaml
 kubectl get configmap api-data -n shop -o yaml
 ```
 
@@ -79,7 +79,7 @@ tier=backend
 
 ### 3. Mount a ConfigMap as a file (the api tier)
 
-`lab/manifests/api-deployment.yaml` mounts the `api-data` ConfigMap's `data.json` key at
+`lab/08/api-deployment.yaml` mounts the `api-data` ConfigMap's `data.json` key at
 `/data.json` — exactly where the Go app reads it:
 
 ```yaml
@@ -96,7 +96,7 @@ volumes:
 Deploy the api tier (Deployment + Service) and call it:
 
 ```bash
-kubectl apply -f lab/manifests/api-deployment.yaml -f lab/manifests/api-service.yaml
+kubectl apply -f lab/08/api-deployment.yaml -f lab/08/api-service.yaml
 kubectl rollout status deployment/api -n shop
 kubectl run client --rm -it --image=curlimages/curl -n shop --restart=Never -- curl -s http://api/api
 ```
@@ -110,10 +110,10 @@ kubectl run client --rm -it --image=curlimages/curl -n shop --restart=Never -- c
 
 ### 4. Change the config and re-roll
 
-Edit the data in `lab/manifests/api-configmap.yaml` (e.g. add an item), then:
+Edit the data in `lab/08/api-configmap.yaml` (e.g. add an item), then:
 
 ```bash
-kubectl apply -f lab/manifests/api-configmap.yaml
+kubectl apply -f lab/08/api-configmap.yaml
 kubectl rollout restart deployment/api -n shop      # remount the updated file
 kubectl run client --rm -it --image=curlimages/curl -n shop --restart=Never -- curl -s http://api/api
 ```

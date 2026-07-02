@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-data
+  namespace: shop
+data:
+  # mounted into the api container at /data.json
+  data.json: |
+    {
+      "version": 1,
+      "name": "shop-api",
+      "items": ["shoes", "socks", "hats"]
+    }

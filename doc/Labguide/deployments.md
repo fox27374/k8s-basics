@@ -38,8 +38,8 @@ sets its colour.
 The declarative way, from the lab manifest:
 
 ```bash
-kubectl apply -f lab/manifests/namespace.yaml
-kubectl apply -f lab/manifests/frontend-deployment.yaml
+kubectl apply -f lab/04/namespace.yaml
+kubectl apply -f lab/04/frontend-deployment.yaml
 kubectl rollout status deployment/frontend -n shop
 ```
 
@@ -130,7 +130,7 @@ kubectl describe rs -n shop -l app=frontend
 Keep `frontend` running if you're continuing to the next chapter. Otherwise:
 
 ```bash
-kubectl delete -f lab/manifests/frontend-deployment.yaml
+kubectl delete -f lab/04/frontend-deployment.yaml
 ```
 
 ## Going further (optional)

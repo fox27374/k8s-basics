@@ -76,7 +76,7 @@ kubectl exec -n shop deploy/frontend -- env | grep COLOR
 `kubectl set env` is imperative. Re-applying the manifest resets `COLOR` to its declared value:
 
 ```bash
-kubectl apply -f lab/manifests/frontend-deployment.yaml
+kubectl apply -f lab/05/frontend-deployment.yaml
 kubectl exec -n shop deploy/frontend -- env | grep COLOR     # back to blue
 ```
 
@@ -92,7 +92,7 @@ envFrom:
       name: db-credentials      # every key (POSTGRES_USER, _PASSWORD, _DB) becomes an env var
 ```
 
-> Keep this in mind for [Secrets](secrets.md): `lab/manifests/db-deployment.yaml` uses `envFrom`
+> Keep this in mind for [Secrets](secrets.md): `lab/09/db-deployment.yaml` uses `envFrom`
 > with `secretRef` to feed postgres its credentials.
 
 ## Recap

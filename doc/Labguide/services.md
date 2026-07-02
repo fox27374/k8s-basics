@@ -29,7 +29,7 @@ To reach a Service from *outside* the cluster you use a **NodePort**, a **LoadBa
 ### 1. Expose the frontend as a ClusterIP Service
 
 ```bash
-kubectl apply -f lab/manifests/frontend-service.yaml
+kubectl apply -f lab/06/frontend-service.yaml
 kubectl get svc -n shop frontend
 ```
 
@@ -100,7 +100,7 @@ curl -s http://<node-ip>:<nodePort>       # replace with your k3s node IP and th
 Then switch it back (Ingress is the cleaner way to expose HTTP):
 
 ```bash
-kubectl apply -f lab/manifests/frontend-service.yaml
+kubectl apply -f lab/06/frontend-service.yaml
 ```
 
 ## Recap
@@ -115,7 +115,7 @@ kubectl apply -f lab/manifests/frontend-service.yaml
 Keep `frontend` + its Service for later chapters, or:
 
 ```bash
-kubectl delete -f lab/manifests/frontend-service.yaml
+kubectl delete -f lab/06/frontend-service.yaml
 ```
 
 ## Going further (optional)

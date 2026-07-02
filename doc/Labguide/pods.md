@@ -40,8 +40,6 @@ spec:
   containers:
     - name: web
       image: nginx:alpine
-      ports:
-        - containerPort: 80
 ```
 
 ### 2. Apply the manifest
@@ -80,8 +78,6 @@ spec:
   containers:
     - name: web
       image: nginx:alpine
-      ports:
-        - containerPort: 80
     - name: sidecar
       image: busybox
       command: ["sh", "-c", "while true; do date; sleep 5; done"]

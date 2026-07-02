@@ -47,7 +47,13 @@ Install a single-node cluster with:
 curl -sfL https://get.k3s.io | sh -
 ```
 
-Reusable manifests applied during the labs live under [`lab/manifests/`](lab/manifests/).
+Each chapter's manifests live in a numbered folder under [`lab/`](lab/) matching its chapter number —
+e.g. [`lab/04/`](lab/04/) for Deployments, [`lab/08/`](lab/08/) for ConfigMaps. Manifests reused by
+several chapters are copied into each chapter's folder so every folder is self-contained; the
+[capstone](doc/Labguide/capstone-app.md) set (the whole workload) is in [`lab/16/`](lab/16/). The
+container-image sources and build script stay at the `lab/` root
+([`lab/environment/`](lab/environment/), [`lab/configmap/`](lab/configmap/),
+[`lab/build-images.sh`](lab/build-images.sh)).
 
 ## Preparing the lab images
 
