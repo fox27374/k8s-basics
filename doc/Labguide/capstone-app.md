@@ -23,7 +23,7 @@ them together* and verifying the whole thing end to end, then performing a canar
 
 ### 1. Deploy the entire workload
 
-Apply the whole manifest directory (skip `frontend-canary.yaml` for now — that's Task 5):
+Apply the baseline workload (the canary files — `frontend-v2-*` and `frontend-split-*` — come in Task 5):
 
 ```bash
 kubectl apply \
@@ -88,7 +88,8 @@ Roll out **v2 (green)** to a slice of traffic, then promote — the full procedu
 [canary deployment](canary-deployment.md) chapter:
 
 ```bash
-kubectl apply -f lab/15/frontend-canary.yaml      # v2 + weighted TraefikService (80/20)
+kubectl apply -f lab/15/frontend-v2-deployment.yaml -f lab/15/frontend-v2-service.yaml \
+  -f lab/15/frontend-split-traefikservice.yaml -f lab/15/frontend-split-ingressroute.yaml   # v2 + weighted split (80/20)
 for i in $(seq 1 20); do curl -s http://<lab-host>/ | grep -o 'background-color: [a-z]*'; done | sort | uniq -c
 ```
 
