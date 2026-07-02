@@ -112,25 +112,7 @@ kubectl run client --rm -it --image=curlimages/curl -n test --restart=Never -- \
 > DNS form is `<service>.<namespace>.svc.cluster.local`. In-namespace you can use just `<service>`;
 > across namespaces add `.<namespace>`. This is why tiers find each other by name, not IP.
 
-### 6. Cap a namespace with a ResourceQuota
-
-A namespace can enforce an aggregate limit on what everything inside it may request:
-
-```bash
-kubectl create quota demo-quota -n test --hard=pods=2,requests.cpu=500m,requests.memory=256Mi
-kubectl describe quota demo-quota -n test
-kubectl scale deployment frontend -n test --replicas=5    # blocked past the pods=2 quota
-kubectl get events -n test | grep -i quota
-```
-
-<details><summary>Expected output</summary>
-
-```
-... forbidden: exceeded quota: demo-quota, requested: pods=1, used: pods=2, limited: pods=2
-```
-</details>
-
-### 7. Tear a namespace down in one command
+### 6. Tear a namespace down in one command
 
 ```bash
 kubectl delete namespace test     # deletes the deployment, quota, everything inside it
