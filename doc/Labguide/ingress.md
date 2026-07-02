@@ -51,7 +51,7 @@ traefik   LoadBalancer   10.43.0.50     192.168.x.x   80:31600/TCP,443:31832/TCP
 ### 2. Create an IngressRoute for the frontend
 
 ```bash
-kubectl apply -f lab/13/frontend-ingressroute.yaml
+kubectl apply -f lab/13/ingressroute.yaml
 kubectl get ingressroute -n shop frontend
 ```
 
@@ -109,7 +109,7 @@ curl -s http://frontend.127.0.0.1.nip.io/api/api
 
 > One host, two backends, split by path — Traefik matched `/api` to the api Service and everything
 > else to the frontend. Re-apply the manifest to drop the extra route:
-> `kubectl apply -f lab/13/frontend-ingressroute.yaml`.
+> `kubectl apply -f lab/13/ingressroute.yaml`.
 
 ## Recap
 
@@ -123,7 +123,7 @@ curl -s http://frontend.127.0.0.1.nip.io/api/api
 Keep the IngressRoute for the [canary chapter](canary-deployment.md), or remove it:
 
 ```bash
-kubectl delete -f lab/13/frontend-ingressroute.yaml
+kubectl delete -f lab/13/ingressroute.yaml
 ```
 
 ## Going further (optional)

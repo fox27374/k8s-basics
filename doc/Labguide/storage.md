@@ -56,7 +56,7 @@ kubectl delete pod scratch -n shop      # the emptyDir is gone with the Pod
 ### 3. Create the PersistentVolumeClaim for the db
 
 ```bash
-kubectl apply -f lab/10/db-pvc.yaml
+kubectl apply -f lab/10/pvc.yaml
 kubectl get pvc db-data -n shop
 ```
 
@@ -69,7 +69,7 @@ db-data   Bound     pvc-...  1Gi        RWO            local-path     10s
 </details>
 
 > If you deployed the db tier in the [secrets](secrets.md) chapter, the claim binds as soon as the
-> postgres Pod is scheduled. `db-deployment.yaml` mounts this PVC at
+> postgres Pod is scheduled. Its Deployment (`lab/09/deployment.yaml`) mounts this PVC at
 > `/var/lib/postgresql/data`, with `PGDATA` in a `pgdata` subdirectory.
 
 ### 4. Write data into postgres

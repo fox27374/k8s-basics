@@ -19,7 +19,7 @@ for "a new build") and weight blue/green, then move the dial.
 > Our two "versions" differ only by the `COLOR` env value so the split is visible at a glance. In a
 > real canary, v2 is a genuinely new image tag — everything else here is identical.
 
-The pieces (all in `lab/14/frontend-canary.yaml`):
+The pieces (all in `lab/14/canary.yaml`):
 
 - `frontend-v2` Deployment + Service (selector `version: v2`)
 - the `frontend` Service is pinned to `version: v1`, so blue and green are cleanly separable
@@ -40,7 +40,7 @@ The pieces (all in `lab/14/frontend-canary.yaml`):
 ### 1. Deploy the canary (v2) alongside v1
 
 ```bash
-kubectl apply -f lab/14/frontend-canary.yaml
+kubectl apply -f lab/14/canary.yaml
 kubectl rollout status deployment/frontend-v2 -n shop
 kubectl get deploy -n shop -l app=frontend          # frontend (v1) and frontend-v2 both Ready
 ```
@@ -110,7 +110,7 @@ With all traffic on green, scale the blue Deployment to zero (or delete it):
 ```bash
 kubectl scale deployment frontend -n shop --replicas=0
 # optionally simplify routing back to a single Service:
-kubectl apply -f lab/14/frontend-ingressroute.yaml   # points straight at frontend (now v1, scaled 0)
+kubectl apply -f lab/14/ingressroute.yaml   # points straight at frontend (now v1, scaled 0)
 ```
 
 > In a real promotion you'd instead roll v1's Deployment forward to the v2 image (so `frontend`
@@ -127,9 +127,9 @@ kubectl apply -f lab/14/frontend-ingressroute.yaml   # points straight at fronte
 ## Cleanup
 
 ```bash
-kubectl delete -f lab/14/frontend-canary.yaml --ignore-not-found
-kubectl apply -f lab/14/frontend-deployment.yaml -f lab/14/frontend-service.yaml \
-  -f lab/14/frontend-ingressroute.yaml
+kubectl delete -f lab/14/canary.yaml --ignore-not-found
+kubectl apply -f lab/14/deployment.yaml -f lab/14/service.yaml \
+  -f lab/14/ingressroute.yaml
 ```
 
 ## Going further (optional)

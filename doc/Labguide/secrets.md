@@ -31,11 +31,11 @@ postgres gets a persistent volume.
 
 ### 1. Create the db credentials Secret
 
-`lab/09/db-secret.yaml` uses `stringData`, so you write plain text and Kubernetes encodes it
+`lab/09/secret.yaml` uses `stringData`, so you write plain text and Kubernetes encodes it
 on apply:
 
 ```bash
-kubectl apply -f lab/09/db-secret.yaml
+kubectl apply -f lab/09/secret.yaml
 kubectl get secret db-credentials -n shop
 ```
 
@@ -71,7 +71,7 @@ s3cr3t-change-me
 
 ### 3. Inject the Secret into postgres with `envFrom`
 
-`lab/09/db-deployment.yaml` imports every key as an env var:
+`lab/09/deployment.yaml` imports every key as an env var:
 
 ```yaml
 envFrom:
@@ -82,12 +82,12 @@ envFrom:
 Deploy the db tier and its Service:
 
 ```bash
-kubectl apply -f lab/09/db-deployment.yaml -f lab/09/db-service.yaml
+kubectl apply -f lab/09/deployment.yaml -f lab/09/service.yaml
 kubectl rollout status deployment/db -n shop
 ```
 
 > This Deployment also references a PersistentVolumeClaim (`db-data`). If it stays `Pending`, apply
-> the PVC bundled in this chapter's folder (`kubectl apply -f lab/09/db-pvc.yaml`); the
+> the PVC bundled in this chapter's folder (`kubectl apply -f lab/09/pvc.yaml`); the
 > [storage](storage.md) chapter covers what it does — on k3s the default `local-path` provisioner
 > creates the volume automatically.
 
@@ -138,8 +138,8 @@ volumes:
 Keep the db tier for the [storage](storage.md) chapter, or tear it down:
 
 ```bash
-kubectl delete -f lab/09/db-deployment.yaml -f lab/09/db-service.yaml \
-  -f lab/09/db-secret.yaml --ignore-not-found
+kubectl delete -f lab/09/deployment.yaml -f lab/09/service.yaml \
+  -f lab/09/secret.yaml --ignore-not-found
 ```
 
 ## Going further (optional)

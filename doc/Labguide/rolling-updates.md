@@ -119,7 +119,7 @@ kubectl get deploy frontend -n shop -o jsonpath='{.spec.strategy.rollingUpdate}'
 Reset the frontend to the baseline manifest before moving on:
 
 ```bash
-kubectl apply -f lab/12/frontend-deployment.yaml
+kubectl apply -f lab/12/deployment.yaml
 ```
 
 ## Going further (optional)

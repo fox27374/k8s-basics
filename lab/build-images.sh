@@ -9,7 +9,7 @@
 set -eu
 
 REGISTRY="${REGISTRY:-cr.lab.local}"
-ENGINE="${ENGINE:-docker}"
+ENGINE="${ENGINE:-podman}"
 PUSH="${PUSH:-1}"
 LAB_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 
@@ -22,8 +22,8 @@ echo ">> engine=$ENGINE  registry=$REGISTRY  push=$PUSH"
 "$ENGINE" build -f "$LAB_DIR/configmap/Containerfile"   -t "$REGISTRY/lab-api:1"       "$LAB_DIR/configmap"
 
 # 2. Mirror the upstream postgres image into the lab registry.
-"$ENGINE" pull postgres:16-alpine
-"$ENGINE" tag  postgres:16-alpine "$REGISTRY/postgres:16-alpine"
+"$ENGINE" pull docker.io/postgres:16-alpine
+"$ENGINE" tag  docker.io/postgres:16-alpine "$REGISTRY/postgres:16-alpine"
 
 IMAGES="lab-frontend:v1 lab-frontend:v2 lab-api:1 postgres:16-alpine"
 
