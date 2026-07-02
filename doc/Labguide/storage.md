@@ -75,8 +75,8 @@ db-data   Bound     pvc-...  1Gi        RWO            local-path     10s
 ### 4. Write data into postgres
 
 ```bash
-kubectl exec -n shop deploy/db -- sh -c \
-  'PGPASSWORD=$POSTGRES_PASSWORD psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "create table if not exists notes(msg text); insert into notes values('"'"'persisted!'"'"'); select * from notes;"'
+kubectl exec -it -n shop deploy/db -- sh
+PGPASSWORD=$POSTGRES_PASSWORD psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "create table if not exists notes(msg text); insert into notes values('Kubernetes Training');"
 ```
 
 <details><summary>Expected output</summary>
@@ -84,8 +84,8 @@ kubectl exec -n shop deploy/db -- sh -c \
 ```
    msg
 -----------
- persisted!
-(1 row)
+CREATE TABLE
+INSERT 0 1
 ```
 </details>
 
@@ -94,16 +94,16 @@ kubectl exec -n shop deploy/db -- sh -c \
 ```bash
 kubectl delete pod -n shop -l app=db          # the Deployment recreates it
 kubectl rollout status deployment/db -n shop
-kubectl exec -n shop deploy/db -- sh -c \
-  'PGPASSWORD=$POSTGRES_PASSWORD psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "select * from notes;"'
+kubectl exec -it -n shop deploy/db -- sh
+PGPASSWORD=$POSTGRES_PASSWORD psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "select * from notes;"
 ```
 
 <details><summary>Expected output</summary>
 
 ```
-   msg
------------
- persisted!
+         msg
+---------------------
+ Kubernetes Training
 (1 row)
 ```
 </details>
