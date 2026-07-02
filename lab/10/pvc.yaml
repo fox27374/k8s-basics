@@ -6,7 +6,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  # k3s default StorageClass is local-path; omit storageClassName to use it.
+  storageClassName: local-path
   resources:
     requests:
       storage: 1Gi
