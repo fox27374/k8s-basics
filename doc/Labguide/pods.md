@@ -1,4 +1,4 @@
-# Pod manifests
+# Pods
 
 > **Goal:** define a Pod declaratively in a YAML manifest, apply it, compare your file with the live object, and add a second (sidecar) container.
 

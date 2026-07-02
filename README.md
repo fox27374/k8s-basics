@@ -10,23 +10,24 @@ first; the [capstone](doc/Labguide/capstone-app.md) assembles them.
 
 0) [kubectl basics](doc/Labguide/kubectl-basics.md)
 1) [Imperative vs declarative](doc/Labguide/imperative-vs-declarative.md)
-2) [Pod manifests](doc/Labguide/pod-manifests.md)
-3) [Deployments](doc/Labguide/deployments.md)
-4) [Environment variables](doc/Labguide/environment-variables.md)
-5) [Services](doc/Labguide/services.md)
-6) [Labels and namespaces](doc/Labguide/labels-and-namespaces.md)
-7) [ConfigMaps](doc/Labguide/configmaps.md)
-8) [Secrets](doc/Labguide/secrets.md)
-9) [Storage](doc/Labguide/storage.md)
-10) [Health checks and resources](doc/Labguide/health-and-resources.md)
-11) [Rolling updates and rollbacks](doc/Labguide/rolling-updates.md)
-12) [Ingress with Traefik IngressRoute](doc/Labguide/ingress.md)
-13) [Canary deployment](doc/Labguide/canary-deployment.md)
+2) [Pods](doc/Labguide/pods.md)
+3) [Labels and selectors](doc/Labguide/labels.md)
+4) [Deployments](doc/Labguide/deployments.md)
+5) [Environment variables](doc/Labguide/environment-variables.md)
+6) [Services](doc/Labguide/services.md)
+7) [Namespaces](doc/Labguide/namespaces.md)
+8) [ConfigMaps](doc/Labguide/configmaps.md)
+9) [Secrets](doc/Labguide/secrets.md)
+10) [Storage](doc/Labguide/storage.md)
+11) [Health checks and resources](doc/Labguide/health-and-resources.md)
+12) [Rolling updates and rollbacks](doc/Labguide/rolling-updates.md)
+13) [Ingress with Traefik IngressRoute](doc/Labguide/ingress.md)
+14) [Canary deployment](doc/Labguide/canary-deployment.md)
 
 Optional / advanced:
 
-14) [Helm](doc/Labguide/helm.md)
-15) [Capstone: multi-tier shop app](doc/Labguide/capstone-app.md)
+15) [Helm](doc/Labguide/helm.md)
+16) [Capstone: multi-tier shop app](doc/Labguide/capstone-app.md)
 
 
 ## Lab environment
@@ -48,26 +49,45 @@ curl -sfL https://get.k3s.io | sh -
 
 Reusable manifests applied during the labs live under [`lab/manifests/`](lab/manifests/).
 
-## Building the lab images
+## Preparing the lab images
 
-The **frontend** and **api** tiers use two small images built from this repo
-([`lab/environment/`](lab/environment/) and [`lab/configmap/`](lab/configmap/)). The **db** tier uses
-stock `postgres:16-alpine` (pulled normally). There's no registry — build the images and side-load
-them straight into k3s's containerd:
+Every image the manifests use is pulled from the lab registry at **`cr.lab.local`**. The **frontend**
+and **api** tiers are built from this repo ([`lab/environment/`](lab/environment/) and
+[`lab/configmap/`](lab/configmap/)); the **db** tier is upstream `postgres:16-alpine` mirrored into
+the same registry. Build, tag and push everything **before the training starts** — the
+[`lab/build-images.sh`](lab/build-images.sh) script does all of it:
 
 ```bash
-# build (docker or podman both work)
-docker build -t lab-frontend:v1 lab/environment
-docker build -t lab-frontend:v2 lab/environment   # same image; the "version" is the COLOR env value
-docker build -t lab-api:1       lab/configmap
+./lab/build-images.sh                 # build + push to cr.lab.local with docker
+REGISTRY=cr.lab.local ENGINE=podman ./lab/build-images.sh   # overrides
+```
 
-# import into k3s so Pods can run them without pulling from a registry
-for img in lab-frontend:v1 lab-frontend:v2 lab-api:1; do
-  docker save "$img" | sudo k3s ctr images import -
+Or run the steps by hand (note the `-f`, since the build files are named `Containerfile`, not `Dockerfile`):
+
+```bash
+# build and tag for the registry (docker or podman both work)
+docker build -f lab/environment/Containerfile -t cr.lab.local/lab-frontend:v1 lab/environment
+docker build -f lab/environment/Containerfile -t cr.lab.local/lab-frontend:v2 lab/environment   # same image; the "version" is the COLOR env value
+docker build -f lab/configmap/Containerfile   -t cr.lab.local/lab-api:1       lab/configmap
+
+# mirror the upstream postgres image into the lab registry
+docker pull postgres:16-alpine
+docker tag  postgres:16-alpine cr.lab.local/postgres:16-alpine
+
+# push everything
+for img in lab-frontend:v1 lab-frontend:v2 lab-api:1 postgres:16-alpine; do
+  docker push "cr.lab.local/$img"
 done
 ```
 
-The manifests set `imagePullPolicy: IfNotPresent` so k3s uses these imported images instead of trying
-to pull them. (Building `lab-frontend` twice as `v1`/`v2` is a teaching simplification for the
+The manifests reference these images by their `cr.lab.local/…` name with `imagePullPolicy: IfNotPresent`,
+so each node pulls an image once and then serves it from its local cache.
+
+> **Registry trust / auth.** If `cr.lab.local` serves plain HTTP or uses a private CA, configure the
+> k3s nodes to trust it in `/etc/rancher/k3s/registries.yaml` and restart k3s. If it requires
+> authentication, put the credentials there too (or create an `imagePullSecret` and reference it from
+> the Deployments).
+
+(Building `lab-frontend` twice as `v1`/`v2` is a teaching simplification for the
 [canary](doc/Labguide/canary-deployment.md) chapter — the two "versions" differ only by the `COLOR`
 env var; a real upgrade would be a genuinely new build.)

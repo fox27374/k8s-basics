@@ -2,8 +2,8 @@
 
 > **Goal:** assemble everything into one workload — a **frontend** (env var), an **api** (ConfigMap), and a **db** (Secret + PVC), exposed through a Traefik `IngressRoute` — then run a **canary** release of the frontend.
 
-**Prerequisites:** all earlier chapters, the lab images built and imported into k3s
-(see [Building the lab images](../../README.md#building-the-lab-images)), and Traefik (bundled with k3s).
+**Prerequisites:** all earlier chapters, the lab images pushed to `cr.lab.local`
+(see [Preparing the lab images](../../README.md#preparing-the-lab-images)), and Traefik (bundled with k3s).
 
 ## Concept
 
@@ -12,11 +12,11 @@ configuration mechanism you learned separately, now wired together in the `shop`
 
 | Tier | Image | Config mechanism | Reached by |
 | --- | --- | --- | --- |
-| **frontend** | `lab-frontend:v1` | **env var** `COLOR=blue` | IngressRoute (public) |
-| **api** | `lab-api:1` | **ConfigMap** mounted at `/data.json` | Service `api` (internal) |
-| **db** | `postgres:16-alpine` | **Secret** → env + **PVC** for data | Service `db` (internal) |
+| **frontend** | `cr.lab.local/lab-frontend:v1` | **env var** `COLOR=blue` | IngressRoute (public) |
+| **api** | `cr.lab.local/lab-api:1` | **ConfigMap** mounted at `/data.json` | Service `api` (internal) |
+| **db** | `cr.lab.local/postgres:16-alpine` | **Secret** → env + **PVC** for data | Service `db` (internal) |
 
-All the manifests live in [`lab/manifests/`](../../lab/manifests/); the capstone is mostly *applying
+All the manifests live in [`lab/manifests/`](../../lab/manifests/); the capstone is mostly *applying 
 them together* and verifying the whole thing end to end, then performing a canary.
 
 ## Tasks

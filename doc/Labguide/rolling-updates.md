@@ -35,7 +35,7 @@ We "ship a new version" by switching the frontend image tag (here `v2`, which we
 canary's green build):
 
 ```bash
-kubectl set image deployment/frontend -n shop frontend=lab-frontend:v2 --record
+kubectl set image deployment/frontend -n shop frontend=cr.lab.local/lab-frontend:v2 --record
 ```
 
 > `--record` stores the command in the revision's change-cause so `history` is readable.
@@ -69,7 +69,7 @@ kubectl rollout history deployment/frontend -n shop
 ```
 REVISION  CHANGE-CAUSE
 1         <none>
-2         kubectl set image deployment/frontend frontend=lab-frontend:v2 --record=true
+2         kubectl set image deployment/frontend frontend=cr.lab.local/lab-frontend:v2 --record=true
 ```
 </details>
 
@@ -78,7 +78,7 @@ REVISION  CHANGE-CAUSE
 Deploy an image tag that doesn't exist — the new Pods never become Ready:
 
 ```bash
-kubectl set image deployment/frontend -n shop frontend=lab-frontend:broken
+kubectl set image deployment/frontend -n shop frontend=cr.lab.local/lab-frontend:broken
 kubectl rollout status deployment/frontend -n shop --timeout=30s   # will not complete
 kubectl get pods -n shop -l app=frontend                           # new Pod stuck ImagePullBackOff
 ```

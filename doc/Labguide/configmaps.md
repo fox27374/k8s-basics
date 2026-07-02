@@ -2,7 +2,7 @@
 
 > **Goal:** move configuration out of the image with a ConfigMap — inject values as env vars, and mount a config file into the **api** tier of the workload.
 
-**Prerequisites:** the [environment variables](environment-variables.md) chapter; lab images built and imported; working in the `shop` namespace.
+**Prerequisites:** the [environment variables](environment-variables.md) chapter; lab images pushed to `cr.lab.local`; working in the `shop` namespace.
 
 ## Concept
 

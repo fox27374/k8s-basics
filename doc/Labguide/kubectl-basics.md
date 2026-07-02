@@ -83,7 +83,7 @@ kubectl logs -f web           # follow (Ctrl-C to stop)
 ```bash
 kubectl exec -it web -- sh
 # inside the container:
-curl -s localhost ; exit
+curl -s localhost
 ```
 
 ### 7. Discover fields with `kubectl explain`

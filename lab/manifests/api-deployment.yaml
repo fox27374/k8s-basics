@@ -19,8 +19,8 @@ spec:
     spec:
       containers:
         - name: api
-          image: lab-api:1
-          imagePullPolicy: IfNotPresent   # image is side-loaded into k3s, not pulled
+          image: cr.lab.local/lab-api:1
+          imagePullPolicy: IfNotPresent   # pull once from cr.lab.local, then use the node's cache
           ports:
             - containerPort: 80
           volumeMounts:

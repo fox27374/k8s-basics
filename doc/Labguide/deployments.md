@@ -2,13 +2,16 @@
 
 > **Goal:** run Pods at scale with a Deployment — scale it, watch it self-heal, and meet the ReplicaSet working underneath. This chapter introduces the **frontend** app you'll grow into the capstone workload.
 
-**Prerequisites:** a running k3s cluster, the [pod manifests](pod-manifests.md) chapter, and the
-**lab images built and imported** into k3s (see [Building the lab images](../../README.md#building-the-lab-images)).
+**Prerequisites:** a running k3s cluster, the [Pods](pods.md) and [labels and selectors](labels.md)
+chapters, and the **lab images pushed to `cr.lab.local`**
+(see [Preparing the lab images](../../README.md#preparing-the-lab-images)).
 
 ## Concept
 
 You almost never create bare Pods. A **Deployment** declares *how many* replicas of a Pod you want
 and which image they run; it creates a **ReplicaSet**, which in turn creates and watches the Pods.
+It knows which Pods are "its own" through a label **`selector`** that matches the labels on its Pod
+template — exactly the selectors from the [labels](labels.md) chapter, now doing real work.
 If a Pod dies or a node disappears, the ReplicaSet makes a new one to match the declared
 `replicas` count — this is Kubernetes **reconciliation** and **self-healing** in action. The
 Deployment adds update and rollback behaviour on top (covered in [rolling updates](rolling-updates.md)).
@@ -49,11 +52,11 @@ deployment "frontend" successfully rolled out
 ```
 </details>
 
-> The manifest sets `namespace: shop`. The [labels and namespaces](labels-and-namespaces.md)
-> chapter covers namespaces; for now just know every command below uses `-n shop`.
+> The manifest sets `namespace: shop`. The [namespaces](namespaces.md) chapter covers them in
+> depth; for now just know every command below uses `-n shop`.
 
 The quick imperative equivalent (no file) would be
-`kubectl create deployment frontend --image=lab-frontend:v1 --replicas=2 -n shop`.
+`kubectl create deployment frontend --image=cr.lab.local/lab-frontend:v1 --replicas=2 -n shop`.
 
 ### 2. List what was created
 
