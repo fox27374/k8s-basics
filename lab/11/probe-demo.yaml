@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: probe-demo
+  namespace: shop
+  labels:
+    app: probe-demo
+spec:
+  containers:
+    - name: web
+      image: nginx:alpine
+      ports:
+        - containerPort: 80
+      readinessProbe:
+        httpGet:
+          path: /healthz        # nginx doesn't serve this path -> 404 -> probe fails
+          port: 80
+        initialDelaySeconds: 2
+        periodSeconds: 5
+        failureThreshold: 1
