@@ -7,7 +7,7 @@ spec:
   entryPoints:
     - web                       # Traefik's HTTP entrypoint (:80) on k3s
   routes:
-    - match: Host(`frontend.127.0.0.1.nip.io`)
+    - match: PathPrefix(`/`)
       kind: Rule
       services:
         - name: frontend        # the ClusterIP Service from frontend-service.yaml

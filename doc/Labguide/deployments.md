@@ -14,7 +14,8 @@ It knows which Pods are "its own" through a label **`selector`** that matches th
 template — exactly the selectors from the [labels](labels.md) chapter, now doing real work.
 If a Pod dies or a node disappears, the ReplicaSet makes a new one to match the declared
 `replicas` count — this is Kubernetes **reconciliation** and **self-healing** in action. The
-Deployment adds update and rollback behaviour on top (covered in [rolling updates](rolling-updates.md)).
+Deployment adds rolling updates and rollbacks on top — changing the image spins up a new ReplicaSet
+and shifts Pods across gradually.
 
 The app we use here, **`lab-frontend`**, is an nginx image that paints the whole page a single
 background colour read from a `COLOR` environment variable — so "is it running and which version?"

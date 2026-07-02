@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: cr.lab.local/lab-frontend:v1
+          image: cr.lab.local/lab-frontend:v2
           imagePullPolicy: IfNotPresent   # pull once from cr.lab.local, then use the node's cache
           ports:
             - containerPort: 80

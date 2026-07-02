@@ -20,14 +20,13 @@ first; the [capstone](doc/Labguide/capstone-app.md) assembles them.
 9) [Secrets](doc/Labguide/secrets.md)
 10) [Storage](doc/Labguide/storage.md)
 11) [Health checks and resources](doc/Labguide/health-and-resources.md)
-12) [Rolling updates and rollbacks](doc/Labguide/rolling-updates.md)
-13) [Ingress with Traefik IngressRoute](doc/Labguide/ingress.md)
-14) [Canary deployment](doc/Labguide/canary-deployment.md)
+12) [Ingress with Traefik IngressRoute](doc/Labguide/ingress.md)
+13) [Canary deployment](doc/Labguide/canary-deployment.md)
 
 Optional / advanced:
 
-15) [Helm](doc/Labguide/helm.md)
-16) [Capstone: multi-tier shop app](doc/Labguide/capstone-app.md)
+14) [Helm](doc/Labguide/helm.md)
+15) [Capstone: multi-tier shop app](doc/Labguide/capstone-app.md)
 
 
 ## Lab environment
@@ -50,7 +49,7 @@ curl -sfL https://get.k3s.io | sh -
 Each chapter's manifests live in a numbered folder under [`lab/`](lab/) matching its chapter number —
 e.g. [`lab/04/`](lab/04/) for Deployments, [`lab/08/`](lab/08/) for ConfigMaps. Manifests reused by
 several chapters are copied into each chapter's folder so every folder is self-contained; the
-[capstone](doc/Labguide/capstone-app.md) set (the whole workload) is in [`lab/16/`](lab/16/). The
+[capstone](doc/Labguide/capstone-app.md) set (the whole workload) is in [`lab/15/`](lab/15/). The
 container-image sources and build script stay at the `lab/` root
 ([`lab/environment/`](lab/environment/), [`lab/configmap/`](lab/configmap/),
 [`lab/build-images.sh`](lab/build-images.sh)).

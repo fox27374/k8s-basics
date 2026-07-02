@@ -6,8 +6,8 @@
 
 ## Concept
 
-A [rolling update](rolling-updates.md) replaces the old version with the new one for everyone. A
-**canary** instead runs both versions at once and sends a small slice of real traffic (say 20%) to
+A **rolling update** (the Deployment's default) replaces the old version with the new one for
+everyone. A **canary** instead runs both versions at once and sends a small slice of real traffic (say 20%) to
 the new one, so you can watch error rates and latency before committing. If it looks good you shift
 more traffic; if not, you drop the canary to 0% — no rollback churn, no user-visible incident.
 
@@ -19,7 +19,7 @@ for "a new build") and weight blue/green, then move the dial.
 > Our two "versions" differ only by the `COLOR` env value so the split is visible at a glance. In a
 > real canary, v2 is a genuinely new image tag — everything else here is identical.
 
-The pieces (all in `lab/14/canary.yaml`):
+The pieces (all in `lab/13/canary.yaml`):
 
 - `frontend-v2` Deployment + Service (selector `version: v2`)
 - the `frontend` Service is pinned to `version: v1`, so blue and green are cleanly separable
@@ -40,7 +40,7 @@ The pieces (all in `lab/14/canary.yaml`):
 ### 1. Deploy the canary (v2) alongside v1
 
 ```bash
-kubectl apply -f lab/14/canary.yaml
+kubectl apply -f lab/13/canary.yaml
 kubectl rollout status deployment/frontend-v2 -n shop
 kubectl get deploy -n shop -l app=frontend          # frontend (v1) and frontend-v2 both Ready
 ```
@@ -63,7 +63,7 @@ The colour app paints the page, so curl the background-colour line repeatedly an
 
 ```bash
 for i in $(seq 1 20); do
-  curl -s http://frontend.127.0.0.1.nip.io/ | grep -o 'background-color: [a-z]*'
+  curl -s http://<lab-host>/ | grep -o 'background-color: [a-z]*'
 done | sort | uniq -c
 ```
 
@@ -93,7 +93,7 @@ kubectl patch traefikservice frontend-split -n shop --type=json -p '[
 kubectl patch traefikservice frontend-split -n shop --type=json -p '[
   {"op":"replace","path":"/spec/weighted/services/0/weight","value":0},
   {"op":"replace","path":"/spec/weighted/services/1/weight","value":100}]'
-for i in $(seq 1 10); do curl -s http://frontend.127.0.0.1.nip.io/ | grep -o 'background-color: [a-z]*'; done | sort | uniq -c
+for i in $(seq 1 10); do curl -s http://<lab-host>/ | grep -o 'background-color: [a-z]*'; done | sort | uniq -c
 ```
 
 <details><summary>Expected output</summary>
@@ -110,7 +110,7 @@ With all traffic on green, scale the blue Deployment to zero (or delete it):
 ```bash
 kubectl scale deployment frontend -n shop --replicas=0
 # optionally simplify routing back to a single Service:
-kubectl apply -f lab/14/ingressroute.yaml   # points straight at frontend (now v1, scaled 0)
+kubectl apply -f lab/13/ingressroute.yaml   # points straight at frontend (now v1, scaled 0)
 ```
 
 > In a real promotion you'd instead roll v1's Deployment forward to the v2 image (so `frontend`
@@ -127,9 +127,9 @@ kubectl apply -f lab/14/ingressroute.yaml   # points straight at frontend (now v
 ## Cleanup
 
 ```bash
-kubectl delete -f lab/14/canary.yaml --ignore-not-found
-kubectl apply -f lab/14/deployment.yaml -f lab/14/service.yaml \
-  -f lab/14/ingressroute.yaml
+kubectl delete -f lab/13/canary.yaml --ignore-not-found
+kubectl apply -f lab/13/deployment.yaml -f lab/13/service.yaml \
+  -f lab/13/ingressroute.yaml
 ```
 
 ## Going further (optional)

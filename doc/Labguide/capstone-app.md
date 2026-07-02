@@ -16,7 +16,7 @@ configuration mechanism you learned separately, now wired together in the `shop`
 | **api** | `cr.lab.local/lab-api:1` | **ConfigMap** mounted at `/data.json` | Service `api` (internal) |
 | **db** | `cr.lab.local/postgres:16-alpine` | **Secret** → env + **PVC** for data | Service `db` (internal) |
 
-All the manifests live in [`lab/16/`](../../lab/16/); the capstone is mostly *applying 
+All the manifests live in [`lab/15/`](../../lab/15/); the capstone is mostly *applying 
 them together* and verifying the whole thing end to end, then performing a canary.
 
 ## Tasks
@@ -27,13 +27,13 @@ Apply the whole manifest directory (skip `frontend-canary.yaml` for now — that
 
 ```bash
 kubectl apply \
-  -f lab/16/namespace.yaml \
-  -f lab/16/db-secret.yaml -f lab/16/db-pvc.yaml \
-  -f lab/16/db-deployment.yaml -f lab/16/db-service.yaml \
-  -f lab/16/api-configmap.yaml \
-  -f lab/16/api-deployment.yaml -f lab/16/api-service.yaml \
-  -f lab/16/frontend-deployment.yaml -f lab/16/frontend-service.yaml \
-  -f lab/16/frontend-ingressroute.yaml
+  -f lab/15/namespace.yaml \
+  -f lab/15/db-secret.yaml -f lab/15/db-pvc.yaml \
+  -f lab/15/db-deployment.yaml -f lab/15/db-service.yaml \
+  -f lab/15/api-configmap.yaml \
+  -f lab/15/api-deployment.yaml -f lab/15/api-service.yaml \
+  -f lab/15/frontend-deployment.yaml -f lab/15/frontend-service.yaml \
+  -f lab/15/frontend-ingressroute.yaml
 ```
 
 ### 2. Verify every tier is healthy
@@ -70,7 +70,7 @@ kubectl exec -n shop deploy/db -- sh -c \
 ### 4. Reach the frontend from outside
 
 ```bash
-curl -s http://frontend.127.0.0.1.nip.io/ | grep background-color
+curl -s http://<lab-host>/ | grep background-color
 ```
 
 <details><summary>Expected output</summary>
@@ -88,8 +88,8 @@ Roll out **v2 (green)** to a slice of traffic, then promote — the full procedu
 [canary deployment](canary-deployment.md) chapter:
 
 ```bash
-kubectl apply -f lab/16/frontend-canary.yaml      # v2 + weighted TraefikService (80/20)
-for i in $(seq 1 20); do curl -s http://frontend.127.0.0.1.nip.io/ | grep -o 'background-color: [a-z]*'; done | sort | uniq -c
+kubectl apply -f lab/15/frontend-canary.yaml      # v2 + weighted TraefikService (80/20)
+for i in $(seq 1 20); do curl -s http://<lab-host>/ | grep -o 'background-color: [a-z]*'; done | sort | uniq -c
 ```
 
 <details><summary>Expected output</summary>
@@ -118,7 +118,7 @@ kubectl get deploy -n shop -o custom-columns=\
   **Secret + PVC** (db), fronted by a Traefik **IngressRoute**.
 - Internal tiers talk over **ClusterIP DNS**; only the frontend is exposed.
 - A **canary** ships the next frontend version to a weighted slice before promoting.
-- Everything is declarative in [`lab/16/`](../../lab/16/) — `kubectl apply` stands the
+- Everything is declarative in [`lab/15/`](../../lab/15/) — `kubectl apply` stands the
   whole stack up, and `kubectl delete namespace shop` tears it down.
 
 ## Cleanup
@@ -131,4 +131,4 @@ kubectl delete namespace shop
 
 - Package the workload as a **Helm chart** (see [Helm](helm.md)) with values for image tags and `COLOR`.
 - Wire the api to actually query the db, so the data path spans all three tiers.
-- Put it under GitOps: commit `lab/16/` and have Argo CD or Flux apply it.
+- Put it under GitOps: commit `lab/15/` and have Argo CD or Flux apply it.
