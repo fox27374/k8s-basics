@@ -22,7 +22,7 @@ To reach a Service from *outside* the cluster you use a **NodePort**, a **LoadBa
 | `kubectl expose` | create a Service for a Deployment imperatively |
 | `kubectl apply -f` | create a Service from a manifest |
 | `kubectl get svc` | list Services and their ClusterIPs |
-| `kubectl get endpoints` | show which Pod IPs a Service currently targets |
+| `kubectl describe svc` | get service details and its endpoints |
 
 ## Tasks
 
@@ -46,7 +46,7 @@ The imperative equivalent is `kubectl expose deployment frontend -n shop --port=
 ### 2. See which Pods it targets
 
 ```bash
-kubectl get endpoints frontend -n shop
+kubectl describe svc frontend -n shop
 ```
 
 > The Service selector (`app: frontend, version: v1`) matched the frontend Pods and turned their
@@ -57,8 +57,7 @@ kubectl get endpoints frontend -n shop
 Start a throwaway client Pod and curl the Service by name:
 
 ```bash
-kubectl run client --rm -it --image=curlimages/curl -n shop --restart=Never -- \
-  curl -s http://frontend
+kubectl run client --rm -it --image=curlimages/curl -n shop --restart=Never -- curl -s http://frontend
 ```
 
 <details><summary>Expected output</summary>
