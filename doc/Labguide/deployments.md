@@ -99,10 +99,10 @@ Delete one Pod and watch the ReplicaSet immediately replace it:
 
 ```bash
 # in terminal 1: watch the Pods
-kubectl get pods -n shop -l app=frontend -w
+kubectl get pods -n shop
 
 # in terminal 2: delete one Pod
-kubectl delete pod -n shop "$(kubectl get pod -n shop -l app=frontend -o name | head -1)"
+kubectl delete pod -n shop <POD-ID>
 ```
 
 > You declared `replicas: 2`. Kubernetes' job is to keep actual state equal to desired state, so a
@@ -111,7 +111,7 @@ kubectl delete pod -n shop "$(kubectl get pod -n shop -l app=frontend -o name | 
 ### 5. Inspect the ReplicaSet behind the Deployment
 
 ```bash
-kubectl describe rs -n shop -l app=frontend
+kubectl describe rs -n shop
 ```
 
 > Note the **Controlled By** (the Deployment owns the ReplicaSet) and the **Events**. When you
