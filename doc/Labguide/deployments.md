@@ -17,8 +17,8 @@ If a Pod dies or a node disappears, the ReplicaSet makes a new one to match the 
 Deployment adds rolling updates and rollbacks on top — changing the image spins up a new ReplicaSet
 and shifts Pods across gradually.
 
-The app we use here, **`lab-frontend`**, is an nginx image that paints the whole page a single
-background colour read from a `COLOR` environment variable — so "is it running and which version?"
+The app we use here, **`lab-frontend`**, is an nginx image serving a small "server test page" whose
+background colour comes from a `COLOR` environment variable — so "is it running and which version?"
 is answerable at a glance. We start it plain here; the [next chapter](environment-variables.md)
 sets its colour.
 

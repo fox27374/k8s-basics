@@ -11,7 +11,8 @@ under a container's `env:` (one name/value pair at a time) or `envFrom:` (import
 ConfigMap or Secret at once). Env vars are the classic "twelve-factor" way to keep configuration out
 of the image, so the *same* image behaves differently in dev, staging and prod.
 
-Our **`lab-frontend`** image reads one variable, `COLOR`, and paints the page that colour. Changing
+Our **`lab-frontend`** image serves a small "server test page" and reads one variable, `COLOR`, to
+set that page's background — so a change is obvious at a glance. Changing
 `COLOR` is a change to the Pod template, so the Deployment rolls out new Pods to apply it — config
 changes are deployments too. Env vars are perfect for a handful of small values; when configuration
 grows into files or needs to be shared across Deployments, you reach for a

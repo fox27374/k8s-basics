@@ -1,5 +1,8 @@
 FROM docker.io/nginx:alpine
+# index.html is a template — entrypoint.sh renders ${COLOR} into it at startup
 COPY index.html /usr/share/nginx/html/index.html.template
+# static assets served as-is
+COPY style.css script.js /usr/share/nginx/html/
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 EXPOSE 80

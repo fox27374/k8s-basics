@@ -1,13 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background-color: ${COLOR};
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Server Test Page</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body></body>
+<!-- background-color is rendered from the COLOR env var at container start (see entrypoint.sh) -->
+<body style="background-color: ${COLOR}">
+
+<header>
+  <div class="status-dot"></div>
+  <h1>webserver <span>// test page</span></h1>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="hero-label">Connection established</div>
+    <h2>Server is reachable<br>and responding.</h2>
+    <p>This page confirms the web server is up. All info below is resolved client-side — no server-side scripting required.</p>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-label">HTTP Status</div>
+      <div class="card-value ok" id="http-status">200 OK</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Protocol</div>
+      <div class="card-value info" id="protocol">—</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Hostname</div>
+      <div class="card-value" id="hostname">—</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Port</div>
+      <div class="card-value" id="port">—</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Page Load Time</div>
+      <div class="card-value ok" id="load-time">—</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Viewport</div>
+      <div class="card-value" id="viewport">—</div>
+    </div>
+  </div>
+
+  <div class="section-title">Request details</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Field</th><th>Value</th></tr>
+      </thead>
+      <tbody id="request-table"></tbody>
+    </table>
+  </div>
+</main>
+
+<footer>
+  <span>server-test &mdash; static probe page</span>
+  <span id="clock">—</span>
+</footer>
+
+<script src="script.js"></script>
+</body>
 </html>
